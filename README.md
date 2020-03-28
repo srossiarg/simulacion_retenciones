@@ -1,4 +1,5 @@
-# simulacion_retenciones
+# Retenciones vs Imp. a las Ganancias: impacto sobre el patrimonio de los productores
+
 Simulación escenarios de retenciones e impuesto a las ganancias sobre el patrimonio de los productores
 
 Existe consenso sobre el impacto negativo de las retenciones sobre las actividades agropecuarias (al reducir la rentabilidad desincentiva inversión en tecnología, el uso de fertilizantes y reduce la superficie sembrada). El argumento principal para aplicar retenciones es la capacidad recaudatoria del impuesto: en la campaña 18/19 se recaudará en torno a USD 5.500 millones.
