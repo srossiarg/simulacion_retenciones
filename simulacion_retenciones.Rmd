@@ -1,45 +1,69 @@
 ---
-title: "Retenciones vs Imp. a las Ganancias: impacto sobre el patrimonio de los productores"
-author: "Santiago Rossi"
-date: "1 de noviembre de 2019"
+title: "Retenciones vs. impuesto a las ganancias: impacto sobre el patrimonio de los productores"
+author: "Bolsa de Cereales"
+date: "16 de noviembre de 2020"
 output: 
-  html_notebook:
-    toc: true
-    toc_float: true
-    toc_depth: 5
-    theme: united
-    highlight: tango
+  pdf_document:
+    includes: 
+    df_print: kable
+    fig_height: 4
+    fig_width: 6.5
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 1
+ #html_notebook:
+ #  toc: true
+ #  toc_float: true
+ #  toc_depth: 5
+ #  theme: united
+ #  highlight: tango
+
+header-includes:
+   - \usepackage{draftwatermark}
+   
+fontsize: 12pt
+classoption: 10pt
+indent: yes
+lang: es
 ---
 
-```{r warning=FALSE, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE, fig.height=4, fig.width=6.5, message=FALSE}
 library(ggjoy)
 library(scales)
 ```
 
-### Introducción
+\SetWatermarkText{borrador}
 
-Existe consenso sobre el impacto negativo de las retenciones sobre las actividades agropecuarias (al reducir la rentabilidad desincentiva inversión en tecnología, el uso de fertilizantes y reduce la superficie sembrada). El argumento principal para aplicar retenciones es la capacidad recaudatoria del impuesto: en la campaña 18/19 se recaudará en torno a USD 5.500 millones. 
+# Introducción
 
-Una de las características que hace que las retenciones sean un mal impuesto es su carácter pro-cíclico: cuando los productores tienen una campaña mala (buena) las retenciones representan una proporción mayor (menor) de su ingreso. En ese marco, creemos que incrementar el impuesto a las ganancias, que no es procíclico, puede resultar una respuesta más eficiente para incrementar la recaudación.
+Existe consenso sobre el impacto negativo de las retenciones sobre las actividades agropecuarias: al reducir la rentabilidad desincentiva inversión en tecnología, el uso de fertilizantes y reduce la superficie sembrada. El argumento principal para aplicar retenciones es la capacidad recaudatoria del impuesto: en la campaña 19/20 se recaudará en torno a USD 5.600 millones (complejo soja). 
+
+Una de las características que hace que las retenciones sean un mal impuesto es su carácter pro-cíclico: cuando los productores tienen una campaña mala (buena) las retenciones representan una proporción mayor (menor) de su ingreso. En ese marco, creemos que incrementar el impuesto a las ganancias, que no es procíclico, y reducir los derechos de exportación puede resultar una respuesta más inteligente para promover la producción sin desfinanciar al fisco.
 
 En ese sentido. el objetivo de este trabajo es mostrar, aplicando simulaciones, como impactan un incremento de las retenciones y del impuesto a las ganancias sobre la rentabilidad y el patrimonio de los productores y la recaudación nacional. Para ello se elaboraron tres escenarios para los cuales se analiza la dinámica de las variables mencionadas. Los escenarios simulados son los siguientes:
 
-* Escenario 1 **'Situación Actual'**: 25% de alícuota a soja y 25% de alícuota de ganancias.
-* Escenario 2 **'Aumento de Retenciones'**: 35% de alícuota de retención y 25% de alícuota de ganancias.
-* Escenario 3 **'Aumento de Ganancias'**: 25% de alícuota de retención y 35% de alícuota de impuesto a las ganancias.
+* Escenario 1 **'Situación Actual'**: 33% de alícuota de derechos de exportación (DEX) a soja y 30% de alícuota de ganancias.
+* Escenario 2 **'Aumento de Retenciones, manteniendo la alícuota de ganancias'**: 35% de alícuota DEX y 30% de alícuota de ganancias.
+* Escenario 3 **'Aumento de Ganancias con baja de retenciones'**: 28% de alícuota DEX y 35% de alícuota de impuesto a las ganancias.
 
+Los principales resultados del trabajo son: (i) que con los niveles actuales de DEX y alicuota de ganancias puede puede llevar a un brusco deterioro de la situación patrimonial de los productores en el mediano plazo y (ii) que el impuesto a las ganancias permite recaudar un monto similar sin afectar significativamente la sustentabilidad económica.
 
-###  Variables estocásticas:
+El resto del documento se estrucutra de la siguiente manera en la sección 2 se describen las variables aleatorias a partir de las cuales se elaboran los escenarios. En la sección 3 se describen los resultados de las simulaciones.  En la sección 4 se comparan los resultados de los distintos escenarios. Por último en la sección 5 se resumen las principales conclusiones.
+
+#  Variables estocásticas:
 
 Existen dos variables incontrolables para el productor con fuerte incidencia en la rentabilidad de las explotaciones agrícolas: el clima y los precios.
 
-#### Rendimientos
+## Rendimientos
 
-Como el clima afecta directamente los rendimientos, en nuestras simulaciones asumimos que los rendimientos presentan una distribución normal con media 30 quintales y desvío de 9 quintales. 
-```{r, echo=FALSE, warning=FALSE, fig.height=6, fig.width=6}
+Como el clima afecta directamente los rendimientos, en nuestras simulaciones asumimos que los rendimientos presentan una distribución normal con media 33 quintales y desvío de 9 quintales.
+
+```{r, echo=FALSE, warning=FALSE, fig.height=4, fig.width=6.5}
 #set.seed(12345)
 
-media= 30
+media= 33
 desvio= 9
 x = rnorm(1000, mean = media, sd = desvio)  
 P = ecdf(x)
@@ -57,15 +81,14 @@ lines(x, hx, lwd=3, col="#338cd3")
 axis(1, at=seq(0, 60, 10), pos=0)
 ```
 
-#### Precios
 
-En el mismo sentido, los precios se forman en los mercados internacionales y su dinámica es exógena a lo que suceda en nuestro país. En nuestras simulaciones se asume que los precios del poroto de soja tienen una distribución normal con media USD 330 por tonelada y un desvío de USD 40 por tonelada. De esta forma, el 95% de los precios se ubicaran en el rango 250 - 410 USD/tn.
-
-```{r, echo=FALSE, warning=FALSE, fig.height=6, fig.width=6 ,  fig.align='center'}
+```{r, echo=FALSE, warning=FALSE, fig.height=4, fig.width=6.5 ,  fig.align='center'}
 set.seed(12345)
 
 media= 330
 desvio= 40
+valor_p975 <- media+2*desvio
+valor_p025 <- media-2*desvio
 x = rnorm(1000, mean = media, sd = desvio)  
 P = ecdf(x)
 
@@ -73,15 +96,22 @@ x <- seq(-4,4,length=100)*40 + 330
 hx <- dnorm(x,330,40)
 d<-density(x)
 
+```
+
+## Precios
+
+En el mismo sentido, los precios se forman en los mercados internacionales y su dinámica es exógena a lo que suceda en nuestro país. En nuestras simulaciones se asume que los precios del poroto de soja tienen una distribución normal con media USD `r media` por tonelada y un desvío de USD `r desvio` por tonelada. De esta forma, el 95% de los precios se ubicaran en el rango `r valor_p025` - `r valor_p975` USD/tn.
+
+```{r, echo=FALSE, warning=FALSE, fig.height=4, fig.width=6.5 ,  fig.align='center'}
+
 plot(x, hx, type="n", xlab="Cotización FOB(USD/tn)", ylab="",
      main="Distribución de los precio FOB de soja", axes=FALSE)
 
 lines(x, hx, lwd=3, col="#338cd3")
 axis(1, at=seq(150, 600, 50), pos=0)
+
 ```
-
-
-### Simulando las campañas
+# Simulando las campañas
 
 Se asume que los productores tiene un patrimonio inicial que les permite costear tres campañas. 
 
@@ -97,13 +127,15 @@ A través de esta simulación podemos ver que estructura impositiva es más efec
 ```{r echo=FALSE}
 #set.seed(2019)
 
-sim_soja <- function(rinde_soja=3,desvio_soja=0.9, costos_usd_ha=500,
+sim_soja <- function(rinde_soja=3.3,desvio_soja=0.9, costos_usd_ha=322,
                      n_sims = 10000,precio_soja = 330,desvio_precio = 40,
-                     alicuota_retencion=0.3, tasa_ganancias=0.35,n_sim=100) {
+                     alicuota_retencion=0.33, tasa_ganancias=0.30,n_sim=1000) {
   
+  costo_fobbing = 8
+  costo_flete = 30
   #Seteo condiciones iniciales
   patrimonio = 3 * costos_usd_ha #Patrimonio en to permite costear tres campañas
-  precio_fas = precio_soja*(1-alicuota_retencion)
+  precio_fas = precio_soja*(1-alicuota_retencion)-costo_fobbing-costo_flete
   pneto =c()
   reca =c()
   resultado =c()
@@ -127,7 +159,7 @@ sim_soja <- function(rinde_soja=3,desvio_soja=0.9, costos_usd_ha=500,
       
       ingreso_bruto <-precio*rinde
       margen_bruto <-  ingreso_bruto - costos_usd_ha
-      arrendamiento = (rinde_soja/4) * precio_fas
+      arrendamiento = (rinde_soja*.35) * precio_fas
       margen_neto <- margen_bruto - arrendamiento
       
       resultado_economico <-ifelse( margen_neto>0,margen_neto*(1-tasa_ganancias), margen_neto) 
@@ -165,7 +197,7 @@ sim_soja <- function(rinde_soja=3,desvio_soja=0.9, costos_usd_ha=500,
 
 
 ```{r, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE}
-## Escenarios --------------------------
+# Escenarios --------------------------
 library(tidyverse)
 library(ggplot2)
 library(ggthemes)
@@ -177,15 +209,16 @@ escenarios <- data.frame("escenario" = NA_integer_,
                          "proporcion_campanas_positivas"=NA_real_, "resultado_econ_medio" = NA_real_)
 ```
 
-#### Simulación Escenario 1:
+## Simulación escenario 1:
+
 
 Parámetros escenario 1:
 
-*  25% de Alícuota de retención y 25% de impuesto a las ganancias.
+*  33% de Alícuota de retención y 30% de impuesto a las ganancias.
 ```{r, echo=FALSE}
 #Caso 1: situacion actual
 set.seed(2019)
-res1 <- sim_soja(n_sim = 1000,alicuota_retencion = 0.25, tasa_ganancias = 0.25)
+res1 <- sim_soja(n_sim = 1000,alicuota_retencion = 0.33, tasa_ganancias = 0.30)
 ```
 
 ```{r, echo=FALSE}
@@ -196,8 +229,8 @@ res1<-cbind("num_esc"=rep(1,length(res1$pneto)),res1)
 #})
 
 escenario_1<-data.frame("escenario" =1,
-                        "alicuota_retencion (%)" =0.27,
-                        "tasa_ganancias_(%)" = 0.25,
+                        "alicuota_retencion (%)" =0.33,
+                        "tasa_ganancias_(%)" = 0.30,
                         "periodos"= length(res1$pneto), 
                         "recaudacion_total_(USD)" = res1$reca[length(res1$pneto)],
                         "produccion_total_(tn)"= sum(res1$produccion),
@@ -209,7 +242,7 @@ escenarios<-rbind(escenarios,escenario_1) #concateno todo en un dataset con los 
 
 
 ```
-##### Resultados modelo 1
+## Resultados escenario 1
 ```{r,echo=FALSE,tidy=TRUE}
 escenario_1 %>% rename( Escenario = escenario,
                        `Alícuota DEX` = alicuota_retencion....,
@@ -229,22 +262,23 @@ escenario_1 %>% rename( Escenario = escenario,
 
 Las salidas del escenario 1 se interpretan de la siguiente manera:
 
-* el productor pierde todo su patrimonio al cabo de **62 campañas**
-* el gobierno recauda, a lo largo de las 62 campañas, **USD 11.985** por hectárea
-* El productor **tiene un resultado positivo el 43% de las campañas**
-* En promedio el productor **pierde 25 dólares por hectárea cada campaña**
+* el productor nunca pierde todo su patrimonio (se corren en total 1000 campañas)
+* el gobierno recauda, a lo largo de las 1000 campañas, **USD 230 644** por hectárea
+* El productor **tiene un resultado negativo el 56.9% de las campañas**
+* En promedio el productor **gana 23.8 dólares por hectárea cada campaña**
 
 
-#### Simulación Escenario 2
+## Simulación escenario 2
+
 
 Parámetros Escenario 2: 
 
-* 35% de Alícuota de retención y 25% de impuesto a las ganancias.
+* 35% de Alícuota de retención y 30% de impuesto a las ganancias.
 
 ```{r,echo=FALSE}
 #Caso 2: suben soja, mantienen ganancias
 set.seed(2019)
-res2 <- sim_soja(n_sim = 1000,alicuota_retencion = 0.35, tasa_ganancias = 0.25)
+res2 <- sim_soja(n_sim = 1000,alicuota_retencion = 0.35, tasa_ganancias = 0.3)
 ```
 
 ```{r, echo=FALSE}
@@ -257,7 +291,7 @@ res2<-cbind("num_esc"=rep(2,length(res2$pneto)),res2)
 
 escenario_2<-data.frame("escenario" =2,
                         "alicuota_retencion (%)" =0.35,
-                        "tasa_ganancias_(%)" = 0.25,
+                        "tasa_ganancias_(%)" = 0.3,
                         "periodos"= length(res2$pneto), 
                         "recaudacion_total_(USD)" = res2$reca[length(res2$pneto)],
                         "produccion_total_(tn)"= sum(res2$produccion),
@@ -267,7 +301,7 @@ escenario_2<-data.frame("escenario" =2,
 
 escenarios<-rbind(escenarios,escenario_2)
 ```
-##### Resultados modelo 2
+## Resultados escenario 2
 ```{r,echo=FALSE}
 escenario_2 %>% rename( Escenario = escenario,
                        `Alícuota DEX` = alicuota_retencion....,
@@ -287,16 +321,21 @@ escenario_2 %>% rename( Escenario = escenario,
 
 Las salidas del **escenario 2** se interpretan de la siguiente manera:
 
-* el productor pierde todo su patrimonio al cabo de **14 campañas**
-* el gobierno recauda, a lo largo de las 14 campañas, USD 2946 por hectárea
-* El productor tiene un **resultado positivo solo el 35%** de las campañas
-* En promedio el productor **pierde 113 dólares por hectarea cada campaña**
+* el productor pierde todo su patrimonio al cabo de **113 campañas**
+* el gobierno recauda, a lo largo de las 60 campañas, USD 24137 por hectárea
+* El productor tiene un **resultado positivo solo el 50.4%** de las campañas
+* En promedio el productor **pierde 8.55 dólares por hectarea cada campaña**
 
-#### Simulación Escenario 3
+## Simulación escenario 3
+
+Parámetros escenario 3: 
+
+* 28% de alícuota de retención y 35% de impuesto a las ganancias.
+
 ```{r,echo=FALSE, warning=FALSE}
 #Caso 3: = retenciones soja, aumentas ganancias
 set.seed(2019)
-res3 <- sim_soja(n_sim = 1000,alicuota_retencion = 0.25, tasa_ganancias = 0.35)
+res3 <- sim_soja(n_sim = 1000,alicuota_retencion = 0.28, tasa_ganancias = 0.35)
 res3<-cbind("num_esc"=rep(3,length(res3$pneto)),res3)
 
 #with(res3,{
@@ -304,7 +343,7 @@ res3<-cbind("num_esc"=rep(3,length(res3$pneto)),res3)
 #})
 
 escenario_3<-data.frame("escenario" =3,
-                        "alicuota_retencion (%)" =0.25,
+                        "alicuota_retencion (%)" =0.28,
                         "tasa_ganancias_(%)" = 0.35,
                         "periodos"= length(res3$pneto), 
                         "recaudacion_total_(USD)" = res3$reca[length(res3$pneto)],
@@ -317,7 +356,8 @@ escenarios<-rbind(escenarios,escenario_3)
 
 ```
 
-##### Resultados modelo 3
+## Resultados escenario 3
+
 
 ```{r,echo=FALSE, warning=FALSE}
 escenario_3 %>% rename( Escenario = escenario,
@@ -338,40 +378,38 @@ escenario_3 %>% rename( Escenario = escenario,
 
 Las salidas del **escenario 3** se interpretan de la siguiente manera:
 
-* el productor pierde todo su patrimonio al cabo de **60 campañas**
-* el gobierno recauda, a lo largo de las 60 campañas, USD 12164 por hectárea
-* El productor tiene un **resultado positivo el 43.3%** de las campañas
-* En promedio el productor **pierde 29 dólares por hectarea cada campaña**
+* el productor nunca pierde todo su patrimonio (se corren en total 1000 campañas)
+* el gobierno recauda, a lo largo de las 1000 campañas, USD 230 770 por hectárea
+* El productor tiene un **resultado positivo el 62.8%** de las campañas
+* En promedio el productor **gana 43.29 dólares por hectarea cada campaña**
 
-
-
-### Resultados conjuntos
+# Resultados conjuntos
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
 res<- rbind(res1,res2,res3)
 
 res <-res %>%  group_by(num_esc) %>%  mutate( periodo = 1:n()) 
 
-res <- res %>% mutate( escenario = case_when( num_esc==1 ~ "Escenario 1 \n25% Gan. y 25% DEX",
-                                       num_esc==2 ~ "Escenario 2 \n25% Gan. y 35% DEX",
+res <- res %>% mutate( escenario = case_when( num_esc==1 ~ "Escenario 1 \n30% Gan. y 33% DEX",
+                                       num_esc==2 ~ "Escenario 2 \n30% Gan. y 35% DEX",
                                        num_esc == 3 ~ "Escenario 3 \n35% Gan. y 25% DEX"))
 
 ```
 
-#### Evolución del Patrimonio neto del productor 
+## Evolución del patrimonio neto del productor 
 
 En el escenario de mayores retenciones el patrimonio neto (PN) del productor se vuelve negativo al cabo de 14 campañas. Notablemente más rápido que en los escenarios alternativos, en los que el PN se mantiene estable.
 
-```{r, echo=FALSE, warning=FALSE, fig.height=6, fig.width=6 ,  fig.align='center'}
+```{r, echo=FALSE, warning=FALSE, fig.height=5, fig.width=7 ,  fig.align='center'}
 #Patrimonio Neto del productor
 ggplot(res, aes(y = pneto, x = periodo , colour = as.factor(escenario) )) +
-  geom_line(size = 1.5) +
+  geom_line(size = 1.5) + xlim(0,70)+ ylim(0,4000)+
   labs(title = "Patrimonio Neto del productor",
        subtitle = "En dólares") + 
   theme_bw() + scale_colour_fivethirtyeight() + geom_hline(yintercept = 0)+
-  labs(x = "Campañas", y = "Patrimonio Neto del productor (en dólares)", colour= "") +
+  labs(x = "Campañas", y = "Patrimonio Neto del productor (en USD/ha)", colour= "") +
   theme(axis.line.x = element_line(size = .5, colour = "black"),
         axis.line.y = element_line(size = .5, colour = "black"),
-        axis.text.x = element_text(colour = "black", size = 10, angle = 90),
+        axis.text.x = element_text(colour = "black", size = 10, angle = 0),
         axis.text.y = element_text(colour = "black", size = 10),
         title = element_text(size=14),
         legend.position = "top",
@@ -380,11 +418,14 @@ ggplot(res, aes(y = pneto, x = periodo , colour = as.factor(escenario) )) +
         legend.key = element_blank())
 ```
 
-#### Evolución de la Recaudación total
+```{r, echo=FALSE,  fig.height=5, fig.width=7, warning=F,message=F, include=F}
 
-En el escenario de mayores retenciones la recaudación es mayor hasta la campaña nº 14. Sin embargo, es apenas un 25% mayor a costa de volverse insustentable en pocos años.
 
-```{r, echo=FALSE, warning=FALSE, fig.height=6, fig.width=6}
+## Evolución de la Recaudación total
+
+#En el escenario de mayores retenciones la recaudación es mayor hasta la campaña nº 14. Sin embargo, es apenas un 25% mayor a costa de volverse insustentable en pocos años.
+
+
 tmp <- res %>% group_by(num_esc) %>% mutate( maximo_num = max(periodo)) %>% filter(periodo==maximo_num)
 
 
@@ -392,10 +433,11 @@ tmp <- res %>% group_by(num_esc) %>% mutate( maximo_num = max(periodo)) %>% filt
 ggplot(res, aes(y = reca, x = periodo , colour = as.factor(escenario) )) +
   geom_line(size = 1.5) +
   geom_point(data = tmp ,aes(y = reca, x = periodo , colour = as.factor(escenario) ), size=3 )+
-  facet_wrap(~escenario)+
+  facet_wrap(~escenario)+xlim(0,120)+ 
   labs(title = "Recaudación acumulada") + 
+  scale_y_continuous(labels=scales::dollar_format(prefix = "",suffix = "",accuracy = 1),limits = c(0,35000))+
   theme_bw() + scale_colour_fivethirtyeight() +
-  labs(x = "Nº de Campañas hasta quebranto", y = "Recaudacion acumulada (en USD)",subtitle = "en dólares", colour= "") +
+  labs(x = "Nº de Campañas hasta quebranto", y = "Recaudacion acumulada (en USD/ha)",subtitle = "(en USD/ha)", colour= "",caption = "Nota: solo se muestran las primeras 120 campañas") +
   theme(axis.line.x = element_line(size = .5, colour = "black"),
         axis.line.y = element_line(size = .5, colour = "black"),
         axis.text.x = element_text(colour = "black", size = 10, angle = 90),
@@ -410,21 +452,18 @@ ggplot(res, aes(y = reca, x = periodo , colour = as.factor(escenario) )) +
 ```
 
 
-#### Resultado Económico
+## Resultado Económico
 
 La distribución de los resultados económicos difiere en los distintos escenarios siendo notoriamente peor en el caso del aumento de retenciones.
 
 Se entiende como resultado económico como ingreso neto de costos de producción y pago de impuestos (ganancias).
 
-Sobre este punto se destaca que el escenario 2 (mayores retenciones) presenta una distribución bimodal muy acentuada. Esto significa que los resutlados económicos en ese escenario son estan mas polarizados. Esto se debe al caracter prociclico de las retenciones.
-
-```{r,echo=FALSE}
-resultado_economico <-ifelse( margen_neto>0,margen_neto*(1-tasa_ganancias), margen_neto) 
-```
+Sobre este punto se destaca que el escenarios 1 y 2 (mayores retenciones) presentan una distribución bimodal muy acentuada. Esto significa que los resutlados económicos en ese escenario son estan mas polarizados. Esto se debe al caracter prociclico de las retenciones.
 
 
 
-```{r, echo=FALSE, warning=FALSE, fig.height=6, fig.width=6}
+
+```{r, echo=FALSE, warning=FALSE, fig.height=5, fig.width=7, message=F}
 #Resultado economico
 ggplot(res, aes(  y = escenario , x = resultado_economico, fill = as.factor(escenario) )) +
   #geom_boxplot() + 
@@ -434,13 +473,13 @@ ggplot(res, aes(  y = escenario , x = resultado_economico, fill = as.factor(esce
   labs(title = "Resultado Económico productor",
        subtitle = "En dólares") +
   theme_bw() + scale_fill_fivethirtyeight() +
-  labs(x = "Resultado Económicos (en USD)", y = "Frecuencia", fill= "") +
+  labs(x = "Resultado Económico (en USD)", y = "Frecuencia", fill= "") +
   theme(axis.line.x = element_line(size = .5, colour = "black"),
         axis.line.y = element_line(size = .5, colour = "black"),
         axis.text.x = element_text(colour = "black", size = 10, angle = 0),
         axis.text.y = element_text(colour = "black", size = 10),
-        title = element_text(size = 14),
-        axis.title.x = element_text(size = 12),
+        title = element_text(size = 12),
+        axis.title.x = element_text(size = 11),
         legend.position = "top",
         legend.direction = "horizontal",
         legend.box = "horizontal",
@@ -448,13 +487,13 @@ ggplot(res, aes(  y = escenario , x = resultado_economico, fill = as.factor(esce
 
 ```
 
-#### Proporción de Campañas con resultado económico positivo
+## Proporción de campañas con resultado económico positivo
 
-En el gráfico siguiente se presenta la proporción de campañas con resultado económico positivo como proporción del total de campañas. El gráfico muestra claramente como el escenario de mayores retenciones hace que cerca del 60% de las campañas arrojen pérdidas, mientras que en el caso de mayores impuestos a las ganancias la proporción de campañas con pérdidas es idéntica a la situación actual (benchmark).
+En el gráfico siguiente se presenta la proporción de campañas con resultado económico positivo como proporción del total de campañas. El gráfico muestra que el escenario de mayores retenciones hace que cerca del 50% de las campañas arrojen pérdidas, mientras que en el caso de mayores impuestos a las ganancias la proporción de campañas con pérdidas de 37%.
 
-En este sentido, se puede destacar que incrementar el impuesto a las ganancias permite incrementar la recaudación sin poner en riesgo la sustentabilidad económica del sector agrícola. 
+En este sentido, se puede destacar que incrementar el impuesto a las ganancias permite incrementar la recaudación sin poner en riesgo la sustentabilidad económica de los productores.
 
-```{r, echo=FALSE, warning=FALSE, fig.height=6, fig.width=6}
+```{r, echo=FALSE, warning=FALSE, fig.height=5, fig.width=7, message=FALSE}
 tab_contingencia <- res %>% group_by(escenario, num_esc) %>%
   summarise( `Campañas con ganancia` = sum(case_when(resultado == "GANO" ~1,
                                                                              TRUE ~0 ))/length(resultado),
@@ -467,9 +506,9 @@ tab_contingencia <-  tab_contingencia %>% gather(-escenario,-num_esc, key = "var
 
 
 
-ggplot(tab_contingencia, aes(y = valor*100, x = escenario , fill = as.factor(variable) )) +
+ggplot(tab_contingencia, aes(y = valor*100, x = escenario  , fill = as.factor(variable) )) +
   geom_col() + 
-  labs(title = "Ratio campañas con ganancia/ pérdidas",
+  labs(title = "Proporción de campañas con pérdidas/ ganancias",
        subtitle = " ") +
   theme_bw() + scale_fill_fivethirtyeight() +
   coord_flip()+
@@ -487,10 +526,10 @@ ggplot(tab_contingencia, aes(y = valor*100, x = escenario , fill = as.factor(var
         legend.key = element_blank())
 ```
 
-### Conclusiones
+# Conclusiones
 
 * Las retenciones son procíclicas y afectan más a los productores en los años con mal clima o malos precios. 
 
-* Un incremento de las alícuotas de retención a 35% puede llevar a un brusco deterioro de la situación patrimonial de los productores. 
+* La situación actual de alicuotas de 33% puede puede llevar a un brusco deterioro de la situación patrimonial de los productores en contextos de sequía o deterioro de los precios internacionales. 
 
 * El impuesto a las ganancias permite recaudar un monto similar sin afectar significativamente la sustentabilidad económica.
